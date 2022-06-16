@@ -7,16 +7,19 @@ import java.util.Arrays;
 public class GUI extends JFrame implements ActionListener {
 
     // Constants
-    private static final int GRID_LENGTH = 9;
-    private static final int LOCAL_BOX_LENGTH = 3;
-    private static final int FRAME_SIZE = 540;
+    public static final int GRID_LENGTH = 9;
+    public static final int LOCAL_BOX_LENGTH = 3;
+    public static final int FRAME_SIZE = 540;
     private static final int BOX_SIZE = FRAME_SIZE / GRID_LENGTH;
 
     private JTextField[][] textBoxGrid;
     private JMenuItem solve;
     private int[][] inputValues;
+    private int[][] outputValues;
 
     public GUI() {
+
+        this.setTitle("Sudoku Solver");
 
         // Top menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -68,11 +71,21 @@ public class GUI extends JFrame implements ActionListener {
                         inputValues[row][column] = Integer.valueOf(textBoxGrid[row][column].getText());
                 }
             }
+
+            outputBoard();
+
+            for (int[] y : outputValues) {
+                for (int x : y)
+                    System.out.print(x);
+                System.out.println();
+            }
+
+
         }
     }
 
-    public int[][] getUserInput() {
-        return inputValues;
+    public void outputBoard() {
+        outputValues = Solver.solvedBoard(inputValues);
     }
 
     public void paintLocalSquares(int row, int column) {
