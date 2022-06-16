@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +15,7 @@ public class GUI extends JFrame implements ActionListener {
 
     private JTextField[][] textBoxGrid;
     private JMenuItem solve;
+    private JMenuItem clear;
     private int[][] inputValues;
     private int[][] outputValues;
     private int[][] localGridTopLeftCoords = {{0,0}, {0,6}, {3,3}, {6,0}, {6,6}};
@@ -28,13 +28,16 @@ public class GUI extends JFrame implements ActionListener {
         JMenuBar menuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
         solve = new JMenuItem("Solve");
+        clear = new JMenuItem("Clear");
         options.add(solve);
+        options.add(clear);
         this.setJMenuBar(menuBar);
         menuBar.add(options);
         solve.addActionListener(this);
+        clear.addActionListener(this);
 
         // Instantiate array that will hold the grid input values
-        inputValues = new int[9][9];
+        inputValues = new int[GRID_LENGTH][GRID_LENGTH];
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new GridLayout(GRID_LENGTH, GRID_LENGTH));
@@ -52,7 +55,6 @@ public class GUI extends JFrame implements ActionListener {
         }
 
         // Painting some 3x3 squares for visual clarity
-
         for (int i = 0; i < localGridTopLeftCoords.length; i++) {
             paintLocalSquares(localGridTopLeftCoords[i][0], localGridTopLeftCoords[i][1]);
         }
@@ -67,7 +69,6 @@ public class GUI extends JFrame implements ActionListener {
         if (e.getSource() == solve) {
 
             boolean isValidIntegers = true;
-
 
             // Store user input values in a 2D integer grid
             // If spaces are left empty, store 0 in place
@@ -84,7 +85,7 @@ public class GUI extends JFrame implements ActionListener {
                         }
                     }
                     else
-                        inputValues[row][column] = Integer.valueOf(textBoxGrid[row][column].getText());
+                        isValidIntegers = false;
                 }
             }
             if (isBoardValidInitially() && isValidIntegers)
@@ -92,14 +93,22 @@ public class GUI extends JFrame implements ActionListener {
             else
                 boardReset();
         }
+
+        if (e.getSource() == clear) {
+            for (int row = 0; row < GRID_LENGTH; row++) {
+                for (int column = 0; column < GRID_LENGTH; column++) {
+                    textBoxGrid[row][column].setText("");
+                }
+            }
+        }
     }
 
     public boolean isBoardValidInitially() {
-        int[] listCheck = new int[9];
+        int[] listCheck = new int[GRID_LENGTH];
 
         // Check if rows contain a duplicate
         for (int i = 0; i < GRID_LENGTH; i++) {
-=            if (checkDuplicateInList(inputValues[i]))
+            if (checkDuplicateInList(inputValues[i]))
                 return false;
         }
 
@@ -149,7 +158,7 @@ public class GUI extends JFrame implements ActionListener {
         }
         return false;
     }
-    
+
     public void outputBoard() {
         outputValues = Solver.solvedBoard(inputValues);
         for (int row = 0; row < GRID_LENGTH; row++) {
