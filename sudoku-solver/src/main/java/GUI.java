@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -57,20 +58,22 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == solve) {
+            // Store user input values in a 2D integer grid
+            // If spaces are left empty, store 0 in place
             for (int row = 0; row < GRID_LENGTH; row++) {
                 for (int column = 0; column < GRID_LENGTH; column++) {
-                    System.out.println(textBoxGrid[row][column].getText());
-                    if (textBoxGrid[row][column].getText().isEmpty()) {
-                        System.out.println("wow");
-                    }
+                    if (textBoxGrid[row][column].getText().isEmpty())
+                        inputValues[row][column] = 0;
+                    else
+                        inputValues[row][column] = Integer.valueOf(textBoxGrid[row][column].getText());
                 }
             }
-
         }
-
     }
 
-
+    public int[][] getUserInput() {
+        return inputValues;
+    }
 
     public void paintLocalSquares(int row, int column) {
         // Paint starting from top left of the 3x3 given by the coordinate
