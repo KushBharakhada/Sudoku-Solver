@@ -1,0 +1,2 @@
+.idea
+sudoku-solver/.idea

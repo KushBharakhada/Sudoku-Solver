@@ -1,9 +1,16 @@
+/**
+ * Main.java
+ * @author Kush Bharakhada
+ */
+
 public class Main {
 
+    /**
+     * Main method of the program
+     * @param args no command line arguments have been used
+     */
     public static void main(String[] args) {
-
-        GUI grid = new GUI();
+        // Launch application
+        new GUI();
     }
-
-
 }

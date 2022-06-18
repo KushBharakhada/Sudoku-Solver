@@ -5,6 +5,12 @@ import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * GUI.java
+ * Implements the GUI for the sudoku solver
+ * @author Kush Bharakhada
+ */
+
 public class GUI extends JFrame implements ActionListener {
 
     // Constants
@@ -20,9 +26,14 @@ public class GUI extends JFrame implements ActionListener {
     private int[][] outputValues;
     private int[][] localGridTopLeftCoords = {{0,0}, {0,6}, {3,3}, {6,0}, {6,6}};
 
+    /**
+     * Constructor
+     * Creates the interface where values can be inputted and solved board
+     * can be seen
+     */
     public GUI() {
-
         this.setTitle("Sudoku Solver");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Top menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -39,7 +50,6 @@ public class GUI extends JFrame implements ActionListener {
         // Instantiate array that will hold the grid input values
         inputValues = new int[GRID_LENGTH][GRID_LENGTH];
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new GridLayout(GRID_LENGTH, GRID_LENGTH));
         textBoxGrid = new JTextField[GRID_LENGTH][GRID_LENGTH];
 
@@ -63,11 +73,18 @@ public class GUI extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    /**
+     * Performs an action based on what the user clicks in the Options
+     * drop down menu (Clear or Solve board)
+     * Also checks and validates the board
+     * @param e ActionEvent object
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == solve) {
 
+            // Check that a single digit value has been provided
             boolean isValidIntegers = true;
 
             // Store user input values in a 2D integer grid
@@ -91,7 +108,7 @@ public class GUI extends JFrame implements ActionListener {
             if (isBoardValidInitially() && isValidIntegers)
                 outputBoard();
             else
-                boardReset();
+                boardError();
         }
 
         if (e.getSource() == clear) {
@@ -103,6 +120,10 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Validates the initial board that the user provides
+     * @return true if the board can be solved, otherwise false
+     */
     public boolean isBoardValidInitially() {
         int[] listCheck = new int[GRID_LENGTH];
 
@@ -140,7 +161,11 @@ public class GUI extends JFrame implements ActionListener {
         return true;
     }
 
-    public void boardReset() {
+    /**
+     * Fills board with 0's
+     * Used if the board has invalid inputs or cannot be solved
+     */
+    public void boardError() {
         // Sets all values in the grid to 0
         for (int row = 0; row < GRID_LENGTH; row++) {
             for (int column = 0; column < GRID_LENGTH; column++) {
@@ -149,6 +174,11 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Provided a list, checks for duplicates
+     * @param list to check duplicates in
+     * @return true if list contains duplicates, otherwise false
+     */
     public boolean checkDuplicateInList(int[] list) {
         Set<Integer> duplicateTempList = new HashSet<Integer>();
         for (int i : list) {
@@ -159,15 +189,24 @@ public class GUI extends JFrame implements ActionListener {
         return false;
     }
 
+    /**
+     * Sets the text on the GUI to show the result of the board that was to be solved
+     */
     public void outputBoard() {
         outputValues = Solver.solvedBoard(inputValues);
         for (int row = 0; row < GRID_LENGTH; row++) {
             for (int column = 0; column < GRID_LENGTH; column++) {
+                // Transfer output values in the 2D array to the GUI grid so results are seen
                 textBoxGrid[row][column].setText(String.valueOf(outputValues[row][column]));
             }
         }
     }
 
+    /**
+     * Paints 3x3 squares so each local box is easy to identify
+     * @param row of the top left box in the 3x3
+     * @param column of the top left box in the 3x3
+     */
     public void paintLocalSquares(int row, int column) {
         // Paint starting from top left of the 3x3 given by the coordinate
         for (int i = row; i < LOCAL_BOX_LENGTH + row; i++) {
